@@ -1,7 +1,7 @@
 "use strict"; // é
 /*
     name:           aaLevelViewer
-    description:    A simple app to step through image series by index or by level
+    description:    aaLevelViewer is a simple web app written in Javascript to step through image series by index or by level
 
     author:         Antoine ANTIN
     creation date:  2024-03-21
