@@ -6,6 +6,7 @@ aa.LevelViewer is a simple web app written in Javascript to step through image s
 ```js
 LevelViewer
 .load({
+    title: "My title",
     series: [
         {
             name: "My series",

@@ -106,6 +106,7 @@
             accessors: {
                 publics: {
                     series: null,
+                    title:  null,
                 },
             },
             construct: function () {
@@ -118,18 +119,23 @@
                 publics: {
                     load:   function (data={}) {
                         aa.arg.test(data, aa.verifyObject({
-                            series: aa.isArrayLike,
+                            series: blueprint.verifiers.series,
+                            title: blueprint.verifiers.title,
                         }), "'data'");
                         data.sprinkle({
-                            series: []
+                            series: [],
+                            title: null
                         });
                         const that = _(this);
                         data.series = data.series.map(serie => serie instanceof Series ? serie : new Series(serie));
                         that.series.push(...data.series);
+                        that.title = data.title;
                     },
                     render: function () {
                         const that = _(this);
                         const body = document.body;
+
+                        if (that.title) document.title = `${that.title} | ${ENV.APP_NAME}`;
                         
                         let seriesIndex = -1;
                         let imgIndex = -1;
@@ -389,6 +395,7 @@
             },
             verifiers: {
                 series: aa.isArrayLike,
+                title:  aa.isNullOrNonEmptyString,
             },
         };
         aa.manufacture(LevelViewer, blueprint, {cut, get, set});
