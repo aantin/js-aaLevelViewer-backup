@@ -336,9 +336,11 @@
 
                                 const img = new Image();
                                 img.addEventListener("load", e => {
-                                    document.querySelector("#preload").style.backgroundImage = `url(${currentLevel.sources[imgIndex]})`;
                                     requestAnimationFrame(() => {
-                                        body.style.backgroundImage = `url(${currentLevel.sources[imgIndex]})`;
+                                        document.querySelector("#preload").style.backgroundImage = `url(${currentLevel.sources[imgIndex]})`;
+                                        requestAnimationFrame(() => {
+                                            body.style.backgroundImage = `url(${currentLevel.sources[imgIndex]})`;
+                                        });
                                     });
                                 });
                                 img.src = currentLevel.sources[imgIndex];
