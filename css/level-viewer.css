@@ -22,6 +22,13 @@ body {
     justify-content: space-between;
     align-items: center;
 }
+a {
+    text-decoration: none;
+}
+a:hover,
+a:focus {
+    text-decoration: underline;
+}
 aside {
     z-index: 2;
     display: flex;
@@ -56,6 +63,9 @@ aside label input:checked + span {
     color: #000;
     font-weight: bold;
 }
+button.icon {
+    border: 1px solid transparent;
+}
 button.icon:focus {
     border: 1px solid #48f;
 }
@@ -65,7 +75,16 @@ button.icon:disabled {
     border-color: transparent;
     box-shadow: 0 0 0 transparent;
 }
-aside table + h1 {
+button.icon.flash {
+    --anim: .2s ease-out 0s reverse both anim-flash;
+    -webkit-animation: var(--anim);
+    animation: var(--anim);
+}
+@keyframes anim-flash {
+  from {border-color: transparent;}
+  to   {border-color: var(--color-blue);}
+}
+aside h1 {
     margin: 0;
     padding-top: 10px;
     white-space: nowrap;

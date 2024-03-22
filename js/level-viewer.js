@@ -157,7 +157,7 @@
                                     e?.stopPropagation();
                                     imgIndex++;
                                     actions.update();
-                                    document.querySelector("#right")?.focus();
+                                    actions.flash(document.querySelector("#right"));
                                 }},
                             },
                             "image-previous": {
@@ -168,18 +168,7 @@
                                     e?.stopPropagation();
                                     imgIndex--;
                                     actions.update();
-                                    document.querySelector("#left")?.focus();
-                                }},
-                            },
-                            "level-previous": {
-                                description: __("Previous level"),
-                                shortcut: "<Up>",
-                                on: {execute: e => {
-                                    e?.preventDefault();
-                                    e?.stopPropagation();
-                                    levelIndex--;
-                                    actions.update();
-                                    document.querySelector("#up")?.focus();
+                                    actions.flash(document.querySelector("#left"));
                                 }},
                             },
                             "level-next": {
@@ -190,23 +179,19 @@
                                     e?.stopPropagation();
                                     levelIndex++;
                                     actions.update();
-                                    document.querySelector("#down")?.focus();
+                                    actions.flash(document.querySelector("#down"));
                                 }},
                             },
-                            "series-previous": {
-                                description: __("Previous series"),
-                                shortcut: "<PageUp>",
+                            "level-previous": {
+                                description: __("Previous level"),
+                                shortcut: "<Up>",
                                 on: {execute: e => {
                                     e?.preventDefault();
                                     e?.stopPropagation();
-                                    seriesIndex--;
-                                    if (that.series.length > 1) {
-                                        imgIndex = 0;
-                                        levelIndex = 0;
-                                    }
+                                    levelIndex--;
                                     actions.update();
-                                    document.querySelector("#page-up")?.focus();
-                                }}
+                                    actions.flash(document.querySelector("#up"));
+                                }},
                             },
                             "series-next": {
                                 description: __("Next series"),
@@ -220,7 +205,22 @@
                                         levelIndex = 0;
                                     }
                                     actions.update();
-                                    document.querySelector("#page-down")?.focus();
+                                    actions.flash(document.querySelector("#page-down"));
+                                }}
+                            },
+                            "series-previous": {
+                                description: __("Previous series"),
+                                shortcut: "<PageUp>",
+                                on: {execute: e => {
+                                    e?.preventDefault();
+                                    e?.stopPropagation();
+                                    seriesIndex--;
+                                    if (that.series.length > 1) {
+                                        imgIndex = 0;
+                                        levelIndex = 0;
+                                    }
+                                    actions.update();
+                                    actions.flash(document.querySelector("#page-up"));
                                 }}
                             },
                         }).forEach((spec, name) => {
@@ -239,6 +239,12 @@
                         });
 
                         const actions = {
+                            flash: btn => {
+                                btn?.classList.add("flash");
+                                aa.wait(400, () => {
+                                    btn?.classList.remove("flash");
+                                });
+                            },
                             start: () => {
                                 seriesIndex = 0;
                                 imgIndex = 0;
@@ -250,19 +256,27 @@
                                 body.style.backgroundImage = `url(${currentLevel.sources[imgIndex]})`;
                                 body.append($$("aside.bottom",
                                     $$(`button#page-up.icon${that.series.length < 2 ? '.hidden' : ''}`, $$("icon.step-backward") /* ⇞ */, {
-                                        title: __(`Previous series ${aa.shortcut.format(aa.action("series-previous").shortcut, ["simple"])}`),
                                         disabled: that.series.length < 2,
                                         on: {click: e => {
                                             aa.action("series-previous", a => a.execute(e));
-                                        }}}
+                                        }}},
+                                        $$("tooltip", {
+                                            text: __("Previous series"),
+                                            direction: "bottom-right",
+                                            shortcut: aa.shortcut.format(aa.action("series-previous").shortcut, ["simple"])
+                                        })
                                     ),
                                     $$("h1#series-name", currentSeries.name),
                                     $$(`button#page-down.icon${that.series.length < 2 ? '.hidden' : ''}`, $$("icon.step-forward") /* ⇟ */, {
-                                        title: __(`Next series ${aa.shortcut.format(aa.action("series-next").shortcut, ["simple"])}`),
                                         disabled: that.series.length < 2,
                                         on: {click: e => {
                                             aa.action("series-next", a => a.execute(e));
-                                        }}}
+                                        }}},
+                                        $$("tooltip", {
+                                            text: __("Next series"),
+                                            direction: "bottom-left",
+                                            shortcut: aa.shortcut.format(aa.action("series-next").shortcut, ["simple"])
+                                        })
                                     ),
                                 ));
                                 body.append($$("aside.top",
@@ -275,7 +289,11 @@
                                                     levelIndex--;
                                                     actions.update();
                                                 }}
-                                            })),
+                                            }, $$("tooltip", {
+                                                text: __(aa.action("level-previous").description),
+                                                direction: "right",
+                                                shortcut: aa.shortcut.format(aa.action("level-previous").shortcut, ["simple"]),
+                                            }))),
                                         ),
                                         $$("tr",
                                             $$("td", $$("button#left.icon", $$("span.fa.fa-fw.fa-chevron-left"), {
@@ -284,25 +302,33 @@
                                                     imgIndex--;
                                                     actions.update();
                                                 }}
-                                            })),
-                                            $$("td"),
-                                            $$("td", $$("button#right.icon", $$("span.fa.fa-fw.fa-chevron-right"), {
-                                                title: `${aa.action("image-next").description} ${aa.shortcut.format(aa.action("image-next").shortcut, ["simple"])}`,
-                                                on: {click: e => {
-                                                    imgIndex++;
-                                                    actions.update();
-                                                }}
-                                            })),
-                                        ),
-                                        $$("tr",
-                                            $$("td"),
+                                            }, $$("tooltip", {
+                                                text: __(aa.action("image-previous").description),
+                                                direction: "bottom",
+                                                shortcut: aa.shortcut.format(aa.action("image-previous").shortcut, ["simple"]),
+                                            }))),
                                             $$("td", $$("button#down.icon", $$("span.fa.fa-fw.fa-chevron-down"), {
                                                 title: `${aa.action("level-next").description} ${aa.shortcut.format(aa.action("level-next").shortcut, ["simple"])}`,
                                                 on: {click: e => {
                                                     levelIndex++;
                                                     actions.update();
                                                 }}
-                                            })),
+                                            }, $$("tooltip", {
+                                                text: __(aa.action("level-next").description),
+                                                direction: "bottom",
+                                                shortcut: aa.shortcut.format(aa.action("level-next").shortcut, ["simple"]),
+                                            }))),
+                                            $$("td", $$("button#right.icon", $$("span.fa.fa-fw.fa-chevron-right"), {
+                                                title: `${aa.action("image-next").description} ${aa.shortcut.format(aa.action("image-next").shortcut, ["simple"])}`,
+                                                on: {click: e => {
+                                                    imgIndex++;
+                                                    actions.update();
+                                                }}
+                                            }, $$("tooltip", {
+                                                text: __(aa.action("image-next").description),
+                                                direction: "bottom",
+                                                shortcut: aa.shortcut.format(aa.action("image-next").shortcut, ["simple"]),
+                                            }))),
                                         ),
                                     ),
                                     $$("h1#label", currentLevel.name),
