@@ -153,8 +153,8 @@
                                 description: __("Next image"),
                                 shortcut: "<Right>",
                                 on: {execute:  e => {
-                                    e.preventDefault();
-                                    e.stopPropagation();
+                                    e?.preventDefault();
+                                    e?.stopPropagation();
                                     imgIndex++;
                                     actions.update();
                                     document.querySelector("#right")?.focus();
@@ -164,8 +164,8 @@
                                 description: __("Previous image"),
                                 shortcut: "<Left>",
                                 on: {execute: e => {
-                                    e.preventDefault();
-                                    e.stopPropagation();
+                                    e?.preventDefault();
+                                    e?.stopPropagation();
                                     imgIndex--;
                                     actions.update();
                                     document.querySelector("#left")?.focus();
@@ -175,8 +175,8 @@
                                 description: __("Previous level"),
                                 shortcut: "<Up>",
                                 on: {execute: e => {
-                                    e.preventDefault();
-                                    e.stopPropagation();
+                                    e?.preventDefault();
+                                    e?.stopPropagation();
                                     levelIndex--;
                                     actions.update();
                                     document.querySelector("#up")?.focus();
@@ -186,8 +186,8 @@
                                 description: __("Next level"),
                                 shortcut: "<Down>",
                                 on: {execute: e => {
-                                    e.preventDefault();
-                                    e.stopPropagation();
+                                    e?.preventDefault();
+                                    e?.stopPropagation();
                                     levelIndex++;
                                     actions.update();
                                     document.querySelector("#down")?.focus();
@@ -197,8 +197,8 @@
                                 description: __("Previous series"),
                                 shortcut: "<PageUp>",
                                 on: {execute: e => {
-                                    e.preventDefault();
-                                    e.stopPropagation();
+                                    e?.preventDefault();
+                                    e?.stopPropagation();
                                     seriesIndex--;
                                     if (that.series.length > 1) {
                                         imgIndex = 0;
@@ -212,8 +212,8 @@
                                 description: __("Next series"),
                                 shortcut: "<PageDown>",
                                 on: {execute: e => {
-                                    e.preventDefault();
-                                    e.stopPropagation();
+                                    e?.preventDefault();
+                                    e?.stopPropagation();
                                     seriesIndex++;
                                     if (that.series.length > 1) {
                                         imgIndex = 0;
@@ -250,85 +250,70 @@
                                 body.style.backgroundImage = `url(${currentLevel.sources[imgIndex]})`;
                                 body.append($$("aside.bottom",
                                     $$(`button#page-up.icon${that.series.length < 2 ? '.hidden' : ''}`, $$("icon.step-backward") /* ⇞ */, {
+                                        title: __(`Previous series ${aa.shortcut.format(aa.action("series-previous").shortcut, ["simple"])}`),
                                         disabled: that.series.length < 2,
                                         on: {click: e => {
-                                            aa.action("series-previous", a => a.execute());
-                                        }}},
-                                        $$("tooltip", {
-                                        text: "Previous series",
-                                        direction: "left",
-                                        shortcut: aa.shortcut.format("<PageUp>", ["simple"])
-                                    })),
+                                            aa.action("series-previous", a => a.execute(e));
+                                        }}}
+                                    ),
                                     $$("h1#series-name", currentSeries.name),
                                     $$(`button#page-down.icon${that.series.length < 2 ? '.hidden' : ''}`, $$("icon.step-forward") /* ⇟ */, {
+                                        title: __(`Next series ${aa.shortcut.format(aa.action("series-next").shortcut, ["simple"])}`),
                                         disabled: that.series.length < 2,
                                         on: {click: e => {
-                                            aa.action("series-next", a => a.execute());
-                                        }}},
-                                        $$("tooltip", {
-                                        text: "Next series",
-                                        direction: "right",
-                                        shortcut: aa.shortcut.format("<PageDown>", ["simple"])
-                                    })),
+                                            aa.action("series-next", a => a.execute(e));
+                                        }}}
+                                    ),
                                 ));
                                 body.append($$("aside.top",
                                     $$("table",
                                         $$("tr",
                                             $$("td"),
                                             $$("td", $$("button#up.icon", $$("span.fa.fa-fw.fa-chevron-up"), {
+                                                title: `${aa.action("level-previous").description} ${aa.shortcut.format(aa.action("level-previous").shortcut, ["simple"])}`,
                                                 on: {click: e => {
                                                     levelIndex--;
                                                     actions.update();
                                                 }}
-                                            }, $$("tooltip", {
-                                                direction: "left",
-                                                text: aa.action("level-previous")?.description,
-                                                shortcut: aa.shortcut.format("<Up>", ["simple"])
-                                            }))),
+                                            })),
                                         ),
                                         $$("tr",
                                             $$("td", $$("button#left.icon", $$("span.fa.fa-fw.fa-chevron-left"), {
+                                                title: `${aa.action("image-previous").description} ${aa.shortcut.format(aa.action("image-previous").shortcut, ["simple"])}`,
                                                 on: {click: e => {
                                                     imgIndex--;
                                                     actions.update();
                                                 }}
-                                            }, $$("tooltip", {
-                                                direction: "left",
-                                                text: aa.action("image-previous")?.description,
-                                                shortcut: aa.shortcut.format("<Left>", ["simple"])
-                                            }))),
+                                            })),
                                             $$("td"),
                                             $$("td", $$("button#right.icon", $$("span.fa.fa-fw.fa-chevron-right"), {
+                                                title: `${aa.action("image-next").description} ${aa.shortcut.format(aa.action("image-next").shortcut, ["simple"])}`,
                                                 on: {click: e => {
                                                     imgIndex++;
                                                     actions.update();
                                                 }}
-                                            }, $$("tooltip", {
-                                                direction: "right",
-                                                text: aa.action("image-next")?.description,
-                                                shortcut: aa.shortcut.format("<Right>", ["simple"])
-                                            }))),
+                                            })),
                                         ),
                                         $$("tr",
                                             $$("td"),
                                             $$("td", $$("button#down.icon", $$("span.fa.fa-fw.fa-chevron-down"), {
+                                                title: `${aa.action("level-next").description} ${aa.shortcut.format(aa.action("level-next").shortcut, ["simple"])}`,
                                                 on: {click: e => {
                                                     levelIndex++;
                                                     actions.update();
                                                 }}
-                                            }, $$("tooltip", {
-                                                direction: "right",
-                                                text: aa.action("level-next")?.description,
-                                                shortcut: aa.shortcut.format("<Down>", ["simple"])
-                                            }))),
+                                            })),
                                         ),
                                     ),
                                     $$("h1#label", currentLevel.name),
                                     $$(`a#archive${currentSeries.archive ? '' : '.hidden'}`, {href: currentSeries.archive}, currentSeries.archive?.getFilename() ?? '')
                                 ));
+                                body.append($$("main#preload.preload",
+                                ));
                             },
                             update: e => {
                                 // Series:
+                                if (!that.series.length) return;
                                 if (seriesIndex < 0) seriesIndex = that.series.length - 1;
                                 if (seriesIndex >= that.series.length) seriesIndex = 0;
                                 currentSeries = that.series[seriesIndex];
@@ -338,15 +323,25 @@
                                 document.querySelector("#series-name").innerHTML = currentSeries.name ?? '';
 
                                 // Level:
+                                if (!currentSeries.levels.length) return;
                                 if (levelIndex < 0) levelIndex = currentSeries.levels.length - 1;
                                 if (levelIndex >= currentSeries.levels.length) levelIndex = 0;
                                 currentLevel = currentSeries.levels[levelIndex];
                                 document.querySelector("#label").innerHTML = currentLevel.name;
                                 
                                 // Source:
+                                if (!currentLevel.sources.length) return;
                                 if (imgIndex >= currentLevel.sources.length) imgIndex = 0;
                                 if (imgIndex < 0) imgIndex = currentLevel.sources.length - 1;
-                                body.style.backgroundImage = `url(${currentLevel.sources[imgIndex]})`;
+
+                                const img = new Image();
+                                img.addEventListener("load", e => {
+                                    document.querySelector("#preload").style.backgroundImage = `url(${currentLevel.sources[imgIndex]})`;
+                                    requestAnimationFrame(() => {
+                                        body.style.backgroundImage = `url(${currentLevel.sources[imgIndex]})`;
+                                    });
+                                });
+                                img.src = currentLevel.sources[imgIndex];
                             },
                         };
 

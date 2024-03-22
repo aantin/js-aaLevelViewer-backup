@@ -23,12 +23,24 @@ body {
     align-items: center;
 }
 aside {
+    z-index: 2;
     display: flex;
     flex-flow: column nowrap;
     justify-content: center;
     align-items: center;
 
     padding: 20px;
+}
+main.preload {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: transparent;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
 }
 body > aside:first-of-type {
     flex-flow: row nowrap;
