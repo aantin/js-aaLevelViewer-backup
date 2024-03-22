@@ -361,14 +361,24 @@
                             document.querySelector("#loading").innerHTML = __("Source not found");
                             return;
                         }
+
+                        // Progress bar:
+                        const progress = aa.gui.Progress.getBy({title: "Loading images..."});
+                        progress.add("images");
+
                         setTimeout(() => {
+                            const total = count;
                             that.series.forEach(serie => {
                                 serie.levels.forEach(level => {
                                     level.sources.forEach(src => {
                                         const img = new Image();
                                         img.addEventListener("load", e => {
                                             count--;
-                                            if (count === 0) actions.start();
+                                            progress.move("images", (total - count) / total);
+                                            if (count === 0) {
+                                                progress.complete("images");
+                                                actions.start();
+                                            }
                                         });
                                         img.src = src;
                                     });
